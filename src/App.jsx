@@ -1,12 +1,7 @@
-import Login from "@/pages/Login"
+import AppRouter from "@/routes/AppRouter"
 
 const App = () => {
-  return (
-   <>
-      <Login />
-   </>
-   
-  )
+  return (<AppRouter/>)
 }
 
 export default App
