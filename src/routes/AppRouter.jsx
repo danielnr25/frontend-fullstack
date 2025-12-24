@@ -6,6 +6,7 @@ import { isTokenValid } from '@/utils/auth/auth.utils';
 import CategoriesIndex from '@/admin/categories/CategoriesIndex';
 import ProductsIndex from '@/admin/products/ProductsIndex';
 import Index from '@/admin/Index';
+import CategoriesForm from '@/admin/categories/CategoriesForm';
 
 const AppRouter = () => {
   return (
@@ -20,6 +21,8 @@ const AppRouter = () => {
             <Route index element={<Navigate to="dashboard"/>} /> 
             <Route path='dashboard' element={<Index />} />
             <Route path='categories' element={<CategoriesIndex />} />
+            <Route path='categories/new' element={<CategoriesForm />} />
+            <Route path='categories/edit/:id' element={<CategoriesForm />} />
             <Route path='products' element={<ProductsIndex />} />
          </Route>
       </Route>

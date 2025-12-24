@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import CategoriesList from "./CategoriesList";
 import axios from "axios";
 const BASE_URL = import.meta.env.VITE_API_URL;
-const CategoriesIndex = () => {
+import { useNavigate } from "react-router-dom";
 
+const CategoriesIndex = () => {
+   const navigate = useNavigate();
    const [allCategories, setAllCategories] = useState([]);
 
    useEffect(()=>{
@@ -19,6 +21,10 @@ const CategoriesIndex = () => {
       fetchCategories();
    })
 
+   const handleNewCategory = () => {
+      navigate("/admin/categories/new")
+   }
+
 
   return (
     <>
@@ -29,7 +35,9 @@ const CategoriesIndex = () => {
       </div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-          <button className="flex items-center bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2 rounded-lg shadow transition duration-200 cursor-pointer">
+          <button className="flex items-center bg-blue-700 hover:bg-blue-800 text-white font-medium px-4 py-2 rounded-lg shadow transition duration-200 cursor-pointer"
+          onClick={handleNewCategory}
+          >
             <i className="fas fa-plus mr-2"></i>
             Nuevo
           </button>

@@ -1,4 +1,12 @@
+import { useNavigate } from "react-router-dom"
+
 const CategoriesList = ({categories}) => {
+
+   const navigate = useNavigate();
+
+   const handleEditCategory = (id) => {
+      navigate(`/admin/categories/edit/${id}`);
+   }
   return (
     <div>
       <table className="w-full border border-gray-100 roundend-sm">
@@ -19,6 +27,7 @@ const CategoriesList = ({categories}) => {
                   <td className="py-3">{category.descripcion}</td>
                   <td>
                      <button 
+                     onClick={()=>handleEditCategory(category.id)}
                         className="bg-yellow-600 mr-2 text-white px-3 py-1.5 rounded-md cursor-pointer">Editar</button>
                      <button
                         className="bg-red-600 text-white px-3 py-1.5 rounded-md cursor-pointer"
