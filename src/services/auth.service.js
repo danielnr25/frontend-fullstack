@@ -9,7 +9,7 @@ export const loginService = async (data) => {
       body: JSON.stringify(data)
    });
    const result = await response.json();
-   console.log('resultado service:', result)
+   //console.log('resultado service:', result)
    if(!response.ok){
       throw new Error(result.message || "Error en la autenticación")
    }
