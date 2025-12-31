@@ -1,41 +1,59 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createCategory } from "@/services/category.service";
-import { toast } from 'react-toastify';
+import { createCategory, getCategoryById } from "@/services/category.service";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
-const CategoriesForm = ({initialData = {}}) => {
+const CategoriesForm = ({ initialData = {} }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const onchangeBack = () => {
+
+  const [formData, setFormData] = useState({
+    name: initialData.name || "",
+    description: initialData.description || "",
+  });
+const onchangeBack = () => {
     navigate("/admin/categories");
   };
 
-  const [formData, setFormData] = useState({
-      name: initialData.name || "",
-      description: initialData.description || ""
-  });
+   useEffect(() => {
+    if (id) {
+      const fetchCategoryData = async () => {
+        try {
+          const category = await getCategoryById(id);
+          setFormData({
+            name: category.nombre || "",
+            description: category.descripcion || ""
+          })
+        } catch (error) {
+            toast.error(error)
+            onchangeBack();
+        }
+    };
+
+      fetchCategoryData();
+    }
+   }, [id]);
 
   const handleChange = (e) => {
-      const {name, value} = e.target;
-      setFormData({...formData,[name]:value});
-  }
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-  
-  const handleSubmit = async(e) => {
-      e.preventDefault();
-      try{
-         if(id){
-            console.log('actualizando')
-         }else{
-            const response = await createCategory(formData);
-            toast.success(response.message)
-         }
-         onchangeBack(); // listado de categorias
-      }catch(error){
-         console.log(error)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (id) {
+        console.log("actualizando");
+      } else {
+        const response = await createCategory(formData);
+        toast.success(response.message);
       }
-  }
-
+      onchangeBack(); // listado de categorias
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -62,6 +80,7 @@ const CategoriesForm = ({initialData = {}}) => {
             type="text"
             id="name"
             name="name"
+            value={formData.name}
             onChange={handleChange}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             placeholder="Ingresa el nombre de la categoría"
@@ -77,6 +96,7 @@ const CategoriesForm = ({initialData = {}}) => {
           <textarea
             id="description"
             name="description"
+            value={formData.description}
             onChange={handleChange}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             placeholder="Ingresa una descripción"

@@ -7,6 +7,33 @@ export const createCategory = async(categoryData) =>{
       const response = await axios.post(BASE_URL,categoryData);
       return response.data
    } catch (error) {
-      throw new Error("Error al crear la categoria: ", error.response.data)
+      throw error.response?.data || error;
+   }
+}
+
+export const getCategoryById = async(id) =>{
+   try {
+      const response = await axios.get(BASE_URL + `/${id}`);
+      return response.data;
+   } catch (error) {
+      throw error.response?.data || error;
+   }
+}
+
+export const updateCategory = async(id, categoryData) => {
+   try {
+      const response = await axios.put(BASE_URL + `/${id}`,categoryData)
+      return response.data
+   } catch (error) {
+      throw error.response?.data || error;
+   }
+}
+
+export const deleteByCategory = async(id)=>{
+   try {
+      const response = await axios.delete(BASE_URL + `/${id}`);
+      return response.data;
+   } catch (error) {
+      throw error.response?.data || error;
    }
 }
