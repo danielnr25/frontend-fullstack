@@ -20,10 +20,10 @@ export const getCategoryById = async(id) =>{
    }
 }
 
-export const updateCategory = async(id, categoryData) => {
+export const updateCategory = async(id, categoryData) => {
    try {
       const response = await axios.put(BASE_URL + `/${id}`,categoryData)
-      return response.data
+      return response.data;
    } catch (error) {
       throw error.response?.data || error;
    }
@@ -32,6 +32,24 @@ export const updateCategory = async(id, categoryData) => {
 export const deleteByCategory = async(id)=>{
    try {
       const response = await axios.delete(BASE_URL + `/${id}`);
+      return response.data;
+   } catch (error) {
+      throw error.response?.data || error;
+   }
+}
+
+export const searchCategory = async (searchTerm) =>{
+   try {
+      const response = await axios.get(BASE_URL+`/search?name=${searchTerm}`)
+      return response;
+   } catch (error) {
+      throw error.response?.data || error;
+   }
+}
+
+export const allCategory = async (pageNumber,limit) => {
+   try {
+      const response = await axios.get(BASE_URL+`?page=${pageNumber}&limit=${limit}`)
       return response.data;
    } catch (error) {
       throw error.response?.data || error;

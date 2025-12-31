@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { createCategory, getCategoryById } from "@/services/category.service";
+import { createCategory, getCategoryById,updateCategory } from "@/services/category.service";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
 
@@ -26,7 +26,7 @@ const onchangeBack = () => {
             description: category.descripcion || ""
           })
         } catch (error) {
-            toast.error(error)
+            toast.error(error.message)
             onchangeBack();
         }
     };
@@ -44,14 +44,15 @@ const onchangeBack = () => {
     e.preventDefault();
     try {
       if (id) {
-        console.log("actualizando");
+        const response = await updateCategory(id,formData);
+        toast.success(response.message);
       } else {
         const response = await createCategory(formData);
         toast.success(response.message);
       }
       onchangeBack(); // listado de categorias
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
