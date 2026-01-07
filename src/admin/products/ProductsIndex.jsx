@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const BASE_URL = import.meta.env.VITE_API_URL;
 import Pagination from "@/shared/Pagination";
 import ProductList from "./ProductsList";
+import { allProduct,searchProduct } from "@/services/product.service";
 
 const ProductIndex = () => {
 
@@ -20,13 +19,13 @@ const ProductIndex = () => {
    useEffect(() => {
       const fetchProducts = async (pageNumber) => {
          try {
-            const response = await axios.get(`${BASE_URL}/products?page=${pageNumber}&limit=${limit}`);
-            setAllProducts(response.data.products);
-            setProducts(response.data.products);
-            setTotalPages(response.data.pagination.totalPages);
-            setTotalItems(response.data.pagination.totalItems);
+            const response = await allProduct(pageNumber, limit);
+            setAllProducts(response.products);
+            setProducts(response.products);
+            setTotalPages(response.pagination.totalPages);
+            setTotalItems(response.pagination.totalItems);
          } catch (error) {
-            setMessage("Error al obtener los productos: " + error);
+            setMessage(error.message);
          }
       }
       fetchProducts();
@@ -45,7 +44,7 @@ const ProductIndex = () => {
       }
 
       try {
-         const response = await axios.get(`${BASE_URL}/products/search?name=${searchTerm}`);
+         const response = await searchProduct(searchTerm);
          if (response.data.length > 0) {
             setProducts(response.data);
             setTotalPages(1);
@@ -53,18 +52,17 @@ const ProductIndex = () => {
             setMessage("");
          } else {
             setProducts([])
-            setMessage(response.data.message)
+            setMessage(response.message)
             setTotalPages(1);
             setTotalItems(0);
          }
       } catch (error) {
-         setMessage("Error al buscar productos: " + error.response.data.message);
+         setMessage(error.message);
       }
    }
 
    return (
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-
+      <>
          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
             <h1 className="text-2xl font-bold text-gray-800 tracking-tight">
                🛒 Listado de Productos
@@ -113,7 +111,7 @@ const ProductIndex = () => {
                />
             </div>
          )}
-      </div>
+      </>
    )
 }
 

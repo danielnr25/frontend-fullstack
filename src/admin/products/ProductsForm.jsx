@@ -15,7 +15,8 @@ const ProductForm = ({ initialData = {} }) => {
     name: initialData.name || "",
     description: initialData.description || "",
     category: initialData.category_id || "",
-    price: initialData.price || ""
+    price: initialData.price || "",
+    stock: initialData.stock || ""
   });
 
   useEffect(() => {
@@ -28,7 +29,8 @@ const ProductForm = ({ initialData = {} }) => {
             description: product.descripcion || "",
             image: product.imagen || "",
             category: product.categoria_id || "",
-            price: product.precio || ""
+            price: product.precio || "",
+            stock: product.stock || ""
           })
         } catch (error) {
           console.log(error);
@@ -43,8 +45,10 @@ const ProductForm = ({ initialData = {} }) => {
       try {
         const categoriesData = await getCategoriesforSelect();
         setCategories(categoriesData);
+        
       } catch (error) {
-        console.error('Error al cargar las categorias', error);
+        setCategories([]);
+        console.log("Error al cargar categorias: ", error.message);
       }
     }
 
@@ -70,29 +74,26 @@ const ProductForm = ({ initialData = {} }) => {
     e.preventDefault();
     try {
       const formDataToSend = new FormData(); // permite crear un objeto
-
       formDataToSend.append('name', formData.name)
       formDataToSend.append('description', formData.description)
       formDataToSend.append('category_id', formData.category)
       formDataToSend.append('price', formData.price);
+      formDataToSend.append('stock', formData.stock);
       if (imageFile) {
         formDataToSend.append('image', imageFile)
       }
-      console.log(formDataToSend);
+     
       if (id) {
         const response = await updateProduct(id, formDataToSend);
         toast.success(response.message);
-        console.log('actualizando correctamente')
       } else {
         const response = await createProduct(formDataToSend);
         toast.success(response.message);
-        console.log('registrando correctamente')
       }
 
       onchangeback();
     } catch (error) {
-      console.error("Error al procesar el producto: ", error.message);
-      toast.error("Error al procesar el producto: " + error.message);
+      toast.error(error.message);
     }
   };
 
@@ -148,6 +149,21 @@ const ProductForm = ({ initialData = {} }) => {
             onChange={handleChange}
             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             placeholder="Ingresa el precio"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="stock" className="block text-sm font-medium text-gray-700">
+            Stock
+          </label>
+          <input
+            type="text"
+            id="stock"
+            name="stock"
+            value={formData.stock}
+            onChange={handleChange}
+            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            placeholder="Ingresa el stock"
             required
           />
         </div>

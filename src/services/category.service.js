@@ -61,6 +61,7 @@ export const getCategoriesforSelect = async () => {
         const response = await axios.get(BASE_URL + '/allcategories');
         return response.data;
     } catch (error) {
+        console.log(error)
         throw error.response?.data || error;
     }
 }

@@ -1,7 +1,7 @@
 import axios from "axios";
 const BASE_URL = `${import.meta.env.VITE_API_URL}/products`;
 
-// crear una nueva categoria
+// crear una nuevo producto
 export const createProduct = async(productData) =>{
    try {
       const response = await axios.post(BASE_URL,productData);
@@ -47,11 +47,12 @@ export const searchProduct = async (searchTerm) =>{
    }
 }
 
-export const allProducts = async (pageNumber,limit) => {
+export const allProduct = async (pageNumber,limit) => {
    try {
       const response = await axios.get(BASE_URL+`?page=${pageNumber}&limit=${limit}`)
       return response.data;
    } catch (error) {
       throw error.response?.data || error;
+      
    }
 }

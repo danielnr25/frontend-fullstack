@@ -1,13 +1,11 @@
-import axios from "axios"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-const BASE_URL = import.meta.env.VITE_API_URL;
+import { deleteByProduct } from "@/services/product.service";
+import { toast } from 'react-toastify';
 const ProductList = ({products}) => {
-
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null)
-
 
   const openModal = (product) => {
     setSelectedProduct(product)
@@ -22,12 +20,14 @@ const ProductList = ({products}) => {
   const deleteProduct = async () => {
     if (!setSelectedProduct) return
     try {
-      await axios.delete(`${BASE_URL}/products/${selectedProduct.id}`)
+      const response = await deleteByProduct(selectedProduct.id)
+      toast.success(response.message);
+      setSelectedProduct(null);
       //setCategories(categories.filter((cat)=>cat.id !== selectedCategory.id))
       //await deleteCategory(selectedCategory.id)
       closeModal();
     } catch (err) {
-      alert("Error al eliminar categoria" + err)
+      toast.error(err.message);
     }
   }
 
