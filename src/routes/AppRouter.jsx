@@ -7,6 +7,7 @@ import CategoriesIndex from '@/admin/categories/CategoriesIndex';
 import ProductsIndex from '@/admin/products/ProductsIndex';
 import Index from '@/admin/Index';
 import CategoriesForm from '@/admin/categories/CategoriesForm';
+import ProductsForm from '@/admin/products/ProductsForm';
 
 const AppRouter = () => {
   return (
@@ -24,6 +25,8 @@ const AppRouter = () => {
             <Route path='categories/new' element={<CategoriesForm />} />
             <Route path='categories/edit/:id' element={<CategoriesForm />} />
             <Route path='products' element={<ProductsIndex />} />
+            <Route path='products/new' element={<ProductsForm />} />
+            <Route path='products/edit/:id' element={<ProductsForm />} />
          </Route>
       </Route>
    </Routes>
