@@ -2,9 +2,8 @@ import { formatDate } from "@/helpers/formatDate";
 import Loading from "@/shared/Loading";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
-const BASE_URL = import.meta.env.VITE_API_URL;
+import { getSaleById } from "@/services/sales.service";
 
 const SaleDetailModal = ({ isOpen, onClose, sale, size = "md" }) => {
   const navigate = useNavigate();
@@ -12,7 +11,6 @@ const SaleDetailModal = ({ isOpen, onClose, sale, size = "md" }) => {
   const [userRole, setUserRole] = useState(null);
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(false);
-  // frutas = ['fresa','manzana','pera']
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -30,8 +28,8 @@ const SaleDetailModal = ({ isOpen, onClose, sale, size = "md" }) => {
     if (!sale) return;
     setLoading(true);
     try {
-      const response = await axios.get(`${BASE_URL}/sales/${sale.venta_id}`);
-      setSaledetail(response.data);
+      const response = await getSaleById(sale.venta_id);
+      setSaledetail(response);
     } catch (err) {
       setError("Error al obtener los productos: " + err);
     } finally {

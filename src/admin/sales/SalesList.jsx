@@ -1,6 +1,7 @@
 import { formatDate } from "@/helpers/formatDate";
 import { useState } from "react";
 import SaleDetailModal from "./SaleDetailModal";
+import { generateSaleInvoice } from "@/helpers/generateSaleInvoice";
 const SalesList = ({sales}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedSale, setSelectedSale] = useState(null);
@@ -10,7 +11,8 @@ const SalesList = ({sales}) => {
         setIsModalOpen(true);
     }
     const onchangedatailpdf = (sale_id) => {
-        console.log('venta_id',sale_id)
+        const saleaux = sales.find((sale) => sale.venta_id === sale_id);
+        generateSaleInvoice(saleaux);
     } 
   return (
     <div>
@@ -48,7 +50,7 @@ const SalesList = ({sales}) => {
                                 onClick={()=>onchangedatailpdf(sale.venta_id)}
                                 className="flex items-center bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg shadow transition duration-200 cursor-pointer"
                             >
-                                <i class="fa-solid fa-print mr-2"></i>
+                                <i className="fa-solid fa-print mr-2"></i>
                                 fact
                             </button>
                         </td>

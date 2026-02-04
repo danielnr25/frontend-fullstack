@@ -1,11 +1,11 @@
 import { getCurrentMonthDateRange } from "@/helpers/formatDate";
 import { useEffect, useState } from "react";
-import SalesList from "./SalesList";
-const BASE_URL = import.meta.env.VITE_API_URL;
-import axios from "axios";
+import SalesList from "./SalesList";    
 import Loading from "@/shared/Loading";
 import Label from "@/components/Label";
 import Pagination from "@/shared/Pagination";
+import { getSales } from "@/services/sales.service";
+import { generateSalesPDF } from "@/helpers/generateSalesPDF";
 
 const SalesIndex = () => {
     const {startDate,endDate}= getCurrentMonthDateRange(); 
@@ -34,9 +34,9 @@ const SalesIndex = () => {
             if(fechaInicio) params.fechaInicio = fechaInicio;
             if(fechaFin) params.fechaFin = fechaFin;
 
-            const {data} = await axios.get(`${BASE_URL}/sales?`, { params });
-            if(data.sales.length === 0){
-                setMessage("No se encontraron ventas para el rango de fechas seleccionado.");
+            const data = await getSales(params);
+            if(data.message){
+                setMessage(data.message)
                 setSales([]);
                 setTotalPages(1);
                 setTotalItems(0);
@@ -47,7 +47,8 @@ const SalesIndex = () => {
             setTotalItems(data.pagination.totalItems);
             setMessage("");
         } catch (error) {
-            console.log(error) 
+            setError(true);
+            setMessage(error.message);
         }finally{
             setLoading(false);
         }
@@ -58,7 +59,12 @@ const SalesIndex = () => {
     }
 
     const onChangeGenerateReport = () =>{
-        console.log('generando')
+        if (!fechaInicio || !fechaFin) {
+            toast.error("Por favor, selecciona un rango de fechas antes de generar el reporte.");
+            return;
+        }
+
+      generateSalesPDF(sales, fechaInicio, fechaFin);
     }
 
     if(loading) return <Loading message="Cargando Ventas ..."/>;
